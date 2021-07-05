@@ -1,12 +1,14 @@
+require("dotenv").config();
 const express = require("express");
+require("./db.js");
 const morgan = require("morgan");
-const router = require("./src/routes/index");
+const router = require("./routes/index.routes");
 
 //rutas por entidad
-const profesoroutes = require("./src/routes/profesorRoutes");
-const uniroutes = require("./src/routes/universidadRoutes");
-const proyectoroutes = require("./src/routes/proyectoRoutes");
-const analisisroutes = require("./src/routes/analisisRoutes");
+const profesoroutes = require("./routes/profesor.routes");
+const directorroutes = require("./routes/director.routes");
+const proyectoroutes = require("./routes/proyecto.routes");
+const analisisroutes = require("./routes/analisis.routes");
 
 //set app
 const app = express();
@@ -22,7 +24,7 @@ app.use(express.urlencoded({ extended: false })); //extended es para verificar q
 //routes
 app.use("/", router);
 app.use("/profesor", profesoroutes);
-app.use("/universidad", uniroutes);
+app.use("/director", directorroutes);
 app.use("/proyecto", proyectoroutes);
 app.use("/analisis", analisisroutes);
 
