@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const universidadController = require("../controllers/universidadController");
+const directorController = require("../controllers/directorController");
 
-//test
-router.get("/", universidadController.test);
+router.get("/", directorController.test);
+router.get("/createuser", directorController.createuser);
 
 module.exports = router;

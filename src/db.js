@@ -3,6 +3,7 @@ const { USERDB, PASSWORD, DBNAME, MONGODBHOST } = process.env;
 const configdb = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
+  useCreateIndex: true,
 };
 
 const uri = `mongodb+srv://${USERDB}:${PASSWORD}@${MONGODBHOST}/${DBNAME}?retryWrites=true&w=majority`;

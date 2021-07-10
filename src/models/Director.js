@@ -19,4 +19,4 @@ UserSchema.methods.matchPassword = async function (psw) {
   return await bcrypt.compare(psw, this.password);
 };
 
-module.exports = model("Usuario", User);
+module.exports = model("Director", UserSchema);

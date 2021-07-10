@@ -1,11 +1,16 @@
 const express = require("express");
 const router = express.Router();
+const authController = require("../controllers/authController");
 
 //test
 router.get("/", (req, res) => {
-  res.send("funciona");
+  res.send("auth funciona");
 });
 
+router.get("/login", authController.login);
+router.post("/createuser", authController.createuser);
+
+module.exports = router;
 // ejemplos
 // router.get("/user/:id", (req, res) => {
 //   res.json(user1);
