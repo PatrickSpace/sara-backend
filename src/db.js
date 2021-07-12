@@ -10,7 +10,6 @@ const uri = `mongodb+srv://${USERDB}:${PASSWORD}@${MONGODBHOST}/${DBNAME}?retryW
 
 try {
   mongoose.connect(uri, configdb);
-  console.log("bd conectada");
 } catch (err) {
   console.log(err);
 }

@@ -2,8 +2,6 @@ const express = require("express");
 const router = express.Router();
 const analisisController = require("../controllers/analisisController");
 
-// ruta: /analisis
-
 //test
 router.get("/", analisisController.test);
 
