@@ -12,6 +12,13 @@ const userSchema = new Schema({
       required: true,
     },
   ],
+  proyectos: [
+    {
+      ref: "Proyecto",
+      type: Schema.Types.ObjectId,
+      required: false,
+    },
+  ],
 });
 
 userSchema.statics.encryptPassword = async (psw) => {

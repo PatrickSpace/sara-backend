@@ -2,10 +2,8 @@ const express = require("express");
 const router = express.Router();
 const pC = require("../controllers/proyectoController");
 
-//test
-router.get("/", pC.test);
 //listar
-router.get("/all", pC.findAll);
+router.get("/", pC.findAll);
 //listar por id
 router.get("/:id", pC.findbyID);
 // add proyecto

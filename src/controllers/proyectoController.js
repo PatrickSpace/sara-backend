@@ -1,9 +1,6 @@
 const Proyecto = require("../models/Proyecto");
 
 module.exports = {
-  test: function (req, res) {
-    res.send("rutas proyecto funcionan");
-  },
   findAll: async function (req, res) {
     try {
       const lista = await Proyecto.find();

@@ -10,6 +10,12 @@ const proyectoSchema = new Schema(
       type: String,
       required: true,
     },
+    documentos: [
+      {
+        nombre: { type: String, required: true },
+        texto: { type: String, required: true },
+      },
+    ],
   },
   { timestamps: true }
 );
