@@ -1,17 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const analisisController = require("../controllers/analisisController");
-
-//test
-router.get("/", analisisController.test);
-
+const { authjwt } = require("../middlewares/index");
 //texto de pdf
 router.get("/pdf", analisisController.text);
 
 //acceso a microservicio
-router.post("/preguntar", analisisController.preguntar);
+router.post(
+  "/preguntar",
+  [authjwt.verificarToken, authjwt.isProfesor],
+  analisisController.preguntar
+);
 
-router.get("/preguntar", (req, res) => {
-  res.send("preguntar funciona");
-});
 module.exports = router;

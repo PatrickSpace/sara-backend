@@ -29,7 +29,10 @@ module.exports = {
   },
   getAll: async function (req, res) {
     try {
-      const lista = await User.find();
+      const lista = await User.find(
+        {},
+        "roles proyectos _id nombre usuario"
+      ).populate("roles");
       res.status(200).json({ items: lista });
     } catch (err) {
       console.log(err);

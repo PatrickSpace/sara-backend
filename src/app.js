@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: false })); //extended es para verificar q
 
 //routes
 app.use("/api/auth", authroutes);
-app.use("/api/profesor", proyectoroutes);
+app.use("/api/proyecto", proyectoroutes);
 app.use("/api/user", userroutes);
 app.use("/api/analisis", analisisroutes);
 

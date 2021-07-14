@@ -5,6 +5,7 @@ const proyectoSchema = new Schema(
     codigo: {
       type: String,
       required: true,
+      unique: true,
     },
     nombre: {
       type: String,
@@ -12,12 +13,13 @@ const proyectoSchema = new Schema(
     },
     documentos: [
       {
-        nombre: { type: String, required: true },
-        texto: { type: String, required: true },
+        ref: "Document",
+        type: Schema.Types.ObjectId,
+        required: false,
       },
     ],
   },
   { timestamps: true }
 );
 
-module.exports = model("Proyecto", proyectoSchema, "proyectos");
+module.exports = model("Proyecto", proyectoSchema);
