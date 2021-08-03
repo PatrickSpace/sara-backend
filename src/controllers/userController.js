@@ -31,12 +31,67 @@ module.exports = {
     try {
       const lista = await User.find(
         {},
-        "roles proyectos _id nombre usuario"
+        "proyectos _id nombre usuario"
       ).populate("roles");
       res.status(200).json({ items: lista });
     } catch (err) {
       console.log(err);
     }
+  },
+  getProfesores: async function (req, res) {
+    try {
+      const usuarios = await User.find(
+        {},
+        "proyectos _id nombre usuario"
+      ).populate("roles");
+      let profes = [];
+      if (usuarios.length > 0) {
+        usuarios.forEach((user) => {
+          user.roles.forEach((rol) => {
+            if (rol.nombre === "profesor") {
+              profes.push(user);
+            }
+          });
+        });
+      }
+      res.status(200).json({ items: profes });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  getCoordinadores: async function (req, res) {
+    const usuarios = await User.find(
+      {},
+      "proyectos _id nombre usuario"
+    ).populate("roles");
+    let profes = [];
+    if (usuarios.length > 0) {
+      usuarios.forEach((user) => {
+        user.roles.forEach((rol) => {
+          if (rol.nombre === "director") {
+            profes.push(user);
+          }
+        });
+      });
+    }
+    res.status(200).json({ items: profes });
+  },
+  getDirectores: async function (req, res) {
+    const usuarios = await User.find(
+      {},
+      "proyectos _id nombre usuario"
+    ).populate("roles");
+    let profes = [];
+    if (usuarios.length > 0) {
+      usuarios.forEach((user) => {
+        user.roles.forEach((rol) => {
+          if (rol.nombre === "director") {
+            profes.push(user);
+          }
+        });
+      });
+    }
+    res.status(200).json({ items: profes });
   },
   createuser: async function (req, res) {
     try {

@@ -8,6 +8,21 @@ router.get(
   [authjwt.verificarToken, authjwt.isDirector],
   userController.getAll
 );
+router.get(
+  "/profesores",
+  [authjwt.verificarToken, authjwt.isDirector],
+  userController.getProfesores
+);
+router.get(
+  "/direcotres",
+  [authjwt.verificarToken, authjwt.isDirector],
+  userController.getDirectores
+);
+router.get(
+  "/coordinadores",
+  [authjwt.verificarToken, authjwt.isDirector],
+  userController.getCoordinadores
+);
 
 router.post(
   "/",
