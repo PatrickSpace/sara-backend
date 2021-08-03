@@ -1,10 +1,9 @@
 const axios = require("axios");
 const url = "http://127.0.0.1:5000/preguntar"; //microservicio
-const fs = require("fs");
 const pdfparse = require("pdf-parse");
 
 //trayendo el PDF
-const pdf = fs.readFileSync("D:/Proyectos/sara/Web/Backend/v0/src/pdfs/1.pdf");
+//const pdf = fs.readFileSync("D:/Proyectos/sara/Web/Backend/v0/src/pdfs/1.pdf");
 
 module.exports = {
   test: function (req, res) {
