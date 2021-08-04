@@ -34,5 +34,7 @@ app.use("/api/analisis", analisisroutes);
 
 //init
 app.listen(app.get("port"), () => {
-  console.log(`API running at http://localhost:${app.get("port")}`);
+  console.log(
+    `API running at http://${process.env.BASE_PATH}:${app.get("port")}`
+  );
 });
