@@ -14,7 +14,7 @@ router.get(
   userController.getProfesores
 );
 router.get(
-  "/direcotres",
+  "/directores",
   [authjwt.verificarToken, authjwt.isDirector],
   userController.getDirectores
 );
