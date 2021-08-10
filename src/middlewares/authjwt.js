@@ -14,7 +14,7 @@ module.exports = {
       if (!user) return res.status(400).json({ msg: "Usuario no encontrado" });
       next();
     } catch (err) {
-      return res.status(401).json({ msg: "NO autorizado" });
+      return res.status(401).json({ msg: "No autorizado" });
     }
   },
   isDirector: async function (req, res, next) {
@@ -30,7 +30,7 @@ module.exports = {
       next();
       return;
     } else {
-      return res.status(403).json({ msg: "Se necesitan permisos de Director" });
+      return res.status(401).json({ msg: "Se necesitan permisos de Director" });
     }
   },
   isProfesor: async function (req, res, next) {
@@ -46,7 +46,7 @@ module.exports = {
       next();
       return;
     } else {
-      return res.status(403).json({ msg: "Se necesitan permisos de Profesor" });
+      return res.status(401).json({ msg: "Se necesitan permisos de Profesor" });
     }
   },
   isCoordinador: async function (req, res, next) {
@@ -63,7 +63,7 @@ module.exports = {
       return;
     } else {
       return res
-        .status(403)
+        .status(401)
         .json({ msg: "Se necesitan permisos de Coordinador" });
     }
   },

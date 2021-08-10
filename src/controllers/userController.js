@@ -24,9 +24,6 @@ const errors = async (nombre, usuario, password, roles) => {
 };
 
 module.exports = {
-  test: function (req, res) {
-    res.send("funciona");
-  },
   getAll: async function (req, res) {
     try {
       const lista = await User.find(
@@ -106,20 +103,39 @@ module.exports = {
         const foundRoles = await Rol.find({ nombre: { $in: roles } });
         newUser.roles = foundRoles.map((rol) => rol._id);
         const savedUser = await newUser.save();
-        const token = await jwt.sign(
-          { id: savedUser._id },
-          process.env.SECRET,
-          {
-            expiresIn: 86400,
-          }
-        );
-        res.status(200).json({ token: token });
+
+        res.status(200).json({ msg: "Usuario creado exitosamente" });
       } else {
         res.status(400).json({ msg: errores });
       }
     } catch (err) {
       console.log(err);
       res.status(400).json({ msg: ["usuario no creado"] });
+    }
+  },
+  delete: async function (req, res) {
+    try {
+      await User.findByIdAndDelete(req.params.id);
+      res.status(200).json({ msg: "Usuario borrado exitosamente" });
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ msg: ["Ocurrió un error"] });
+    }
+  },
+  update: async function (req, res) {
+    try {
+      const { nombre, usuario, roles } = req.body;
+      const foundRoles = await Rol.find({ nombre: { $in: roles } });
+      let finalroles = foundRoles.map((rol) => rol._id);
+      await User.findByIdAndUpdate(req.params.id, {
+        nombre,
+        usuario,
+        finalroles,
+      });
+      res.status(200).json({ msg: "Usuario actualizado exitosamente" });
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ msg: ["Ocurrió un error"] });
     }
   },
 };

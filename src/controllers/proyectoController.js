@@ -4,10 +4,11 @@ const Documento = require("../models/Documento");
 module.exports = {
   findAll: async function (req, res) {
     try {
-      const lista = await Proyecto.find().populate("documentos");
+      const lista = await Proyecto.find();
       res.status(200).json({ items: lista });
     } catch (err) {
       res.status(400).json({ msg: "Ocurrió un error" });
+      console.log(err);
     }
   },
   findbyID: async function (req, res) {
@@ -42,16 +43,16 @@ module.exports = {
       res.status(200).json({ msg: `El Proyecto ${nombre} fue actualizado` });
     } catch (err) {
       console.log(err);
-      res.status(400).json({ msg: "ocurrió un error" });
+      res.status(400).json({ msg: ["Ocurrió un error"] });
     }
   },
   delete: async function (req, res) {
     try {
       await Proyecto.findByIdAndDelete(req.params.id);
-      res.status(204).json({ msg: `El Proyecto ${req.params.id} fue borrado` });
+      res.status(204).json({ msg: `El Proyecto fue borrado exitosamente` });
     } catch (err) {
       console.log(err);
-      res.status(400).json({ msg: "ocurrió un error" });
+      res.status(400).json({ msg: ["Ocurrió un error"] });
     }
   },
   addDoc: async function (req, res) {

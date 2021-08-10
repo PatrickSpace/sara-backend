@@ -30,4 +30,7 @@ router.post(
   userController.createuser
 );
 
+router.put("/:id", userController.update);
+router.delete("/:id", userController.delete);
+
 module.exports = router;
