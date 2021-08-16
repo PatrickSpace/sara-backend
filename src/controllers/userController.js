@@ -65,7 +65,7 @@ module.exports = {
     if (usuarios.length > 0) {
       usuarios.forEach((user) => {
         user.roles.forEach((rol) => {
-          if (rol.nombre === "director") {
+          if (rol.nombre === "coordinador") {
             profes.push(user);
           }
         });

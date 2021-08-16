@@ -13,15 +13,15 @@ module.exports = {
   },
   findbyID: async function (req, res) {
     try {
-      const proyectofound = await Proyecto.findById(req.params.id).populate(
-        "documentos"
-      );
+      console.log(req.params.id);
+      const proyectofound = await Proyecto.findById(req.params.id);
       if (!proyectofound) {
         res.status(400).json({ msg: "Este proyecto no existe" });
       }
       res.status(200).json({ proyectofound });
     } catch (err) {
-      res.status(400).json({ msg: "Este proyecto no existe" });
+      console.log(err);
+      res.status(400).json({ msg: "Ocurrio un error" });
     }
   },
   add: async function (req, res) {
