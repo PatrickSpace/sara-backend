@@ -23,6 +23,11 @@ router.get(
   [authjwt.verificarToken, authjwt.isDirector],
   userController.getCoordinadores
 );
+router.get(
+  "/:id",
+  [authjwt.verificarToken, authjwt.isDirector],
+  userController.userbyID
+);
 
 router.post(
   "/",

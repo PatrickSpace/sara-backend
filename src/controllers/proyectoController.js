@@ -13,7 +13,6 @@ module.exports = {
   },
   findbyID: async function (req, res) {
     try {
-      console.log(req.params.id);
       const proyectofound = await Proyecto.findById(req.params.id);
       if (!proyectofound) {
         res.status(400).json({ msg: "Este proyecto no existe" });

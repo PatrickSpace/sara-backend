@@ -90,6 +90,20 @@ module.exports = {
     }
     res.status(200).json({ items: profes });
   },
+  userbyID: async function (req, res) {
+    try {
+      const userfound = await User.findById(
+        req.params.id,
+        "proyectos _id nombre usuario"
+      );
+      if (!userfound) {
+        res.status(400).json({ msg: ["Este proyecto no existe"] });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ msg: ["Ocurrio un error"] });
+    }
+  },
   createuser: async function (req, res) {
     try {
       const { nombre, usuario, password, roles } = req.body;
