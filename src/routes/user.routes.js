@@ -33,7 +33,7 @@ router.put(
     userController.update
 );
 router.delete(
-    "/:id", [authjwt.verificarToken, authjwt.isDirector, userMD.verifySelfDeletion, userMD.verifyExistenceById],
+    "/:id", [authjwt.verificarToken, authjwt.isDirector, userMD.verifyExistenceById, userMD.verifySelfDeletion],
     userController.delete
 );
 module.exports = router;

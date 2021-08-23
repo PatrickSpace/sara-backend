@@ -40,7 +40,5 @@ module.exports = {
             console.log(error);
         }
     },
-    logout: async function(req, res) {
-
-    },
+    logout: async function(req, res) {},
 };
