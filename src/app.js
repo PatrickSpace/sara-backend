@@ -24,7 +24,9 @@ app.use(express.json());
 //middlewares
 app.use(cors());
 app.use(morgan("dev"));
-app.use(express.urlencoded({ extended: false })); //extended es para verificar que envian texto chiqquito (cambiar cuando se reciba el PDF)
+app.use(express.urlencoded({
+    extended: false
+})); //extended es para verificar que envian texto chiqquito (cambiar cuando se reciba el PDF)
 
 //routes
 app.use("/api/auth", authroutes);
@@ -34,5 +36,5 @@ app.use("/api/analisis", analisisroutes);
 
 //init
 app.listen(app.get("port"), () => {
-  console.log(`API running at http://localhost:${app.get("port")}`);
+    console.log(`API running at http://localhost:${app.get("port")}`);
 });

@@ -2,40 +2,38 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
 const { authjwt } = require("../middlewares/index");
+const userMD = require("../middlewares/userMiddleware");
 
 router.get(
-  "/",
-  [authjwt.verificarToken, authjwt.isDirector],
-  userController.getAll
+    "/", [authjwt.verificarToken, authjwt.isDirector],
+    userController.getAll
 );
 router.get(
-  "/profesores",
-  [authjwt.verificarToken, authjwt.isDirector],
-  userController.getProfesores
+    "/profesores", [authjwt.verificarToken, authjwt.isDirector],
+    userController.getProfesores
 );
 router.get(
-  "/directores",
-  [authjwt.verificarToken, authjwt.isDirector],
-  userController.getDirectores
+    "/directores", [authjwt.verificarToken, authjwt.isDirector],
+    userController.getDirectores
 );
 router.get(
-  "/coordinadores",
-  [authjwt.verificarToken, authjwt.isDirector],
-  userController.getCoordinadores
+    "/coordinadores", [authjwt.verificarToken, authjwt.isDirector],
+    userController.getCoordinadores
 );
 router.get(
-  "/:id",
-  [authjwt.verificarToken, authjwt.isDirector],
-  userController.userbyID
+    "/:id", [authjwt.verificarToken, authjwt.isDirector],
+    userController.userbyID
 );
-
 router.post(
-  "/",
-  [authjwt.verificarToken, authjwt.isDirector],
-  userController.createuser
+    "/", [authjwt.verificarToken, authjwt.isDirector, userMD.verifyDuplicatebyReq],
+    userController.createuser
 );
-
-router.put("/:id", userController.update);
-router.delete("/:id", userController.delete);
-
+router.put(
+    "/:id", [authjwt.verificarToken, authjwt.isDirector, userMD.verifyExistenceById],
+    userController.update
+);
+router.delete(
+    "/:id", [authjwt.verificarToken, authjwt.isDirector, userMD.verifySelfDeletion, userMD.verifyExistenceById],
+    userController.delete
+);
 module.exports = router;
