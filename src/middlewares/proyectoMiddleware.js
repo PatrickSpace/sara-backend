@@ -87,8 +87,12 @@ module.exports = {
     //HU-D12: CA2
     projExistenceId: async function(req,res,next ){
         try {
-            const proj = await Proyecto.find({ codigo: req.body.id })
-            if (proj[0]==undefined) {
+            pid=req.params.id
+            if (pid.length!=24){
+                return res.status(406).json({ msg: "El id del proyecto es invalido" });
+            }
+            const proj = await Proyecto.findById(pid)
+            if (!proj) {
                 return res.status(406).json({ msg: "El id del proyecto no existe" });
             }
             next();
