@@ -33,11 +33,14 @@ module.exports = {
             return;
         }
     },
-    ProjVerifyExistenceByCode: async function(req, res, next) {
+    //Related to:
+    //HU-D07: CA7
+    //HU-D09: CA7
+    projDuplicatedCode: async function(req, res, next) {
         try {
-            //TBR: Where does this criteria come from
-            const proj = await Proyecto.find({ codigo: codigo })
-            if (!project) {
+            const proj = await Proyecto.find({ codigo: req.body.codigo });
+            console.log(proj[0])
+            if (proj[0]!=undefined) {
                 return res.status(406).json({ msg: "El codigo ya existe" });
             }
             next();
@@ -48,12 +51,13 @@ module.exports = {
             });
         }
     },
-    ProjVerifyExistenceByID: async function(req, res, next) {
+    //Related to:
+    //HU-D12: CA2
+    projDuplicatedId: async function(req, res, next) {
         try {
-            //TBR: Where does this criteria come from
-            const proj = await Proyecto.find({ codigo: codigo })
-            if (!project) {
-                return res.status(406).json({ msg: "El proyecto ya existe" });
+            const proj = await Proyecto.find({ codigo: req.body.id })
+            if (proj[0]!=undefined) {
+                return res.status(406).json({ msg: "El id del proyecto ya existe" });
             }
             next();
         } catch (err) {
@@ -63,12 +67,29 @@ module.exports = {
             });
         }
     },
-    ProjVerifyExistenceByName: async function(req, res, next) {
+    //Related to:
+    //HU-D07: CA8
+    projDuplicatedName: async function(req, res, next) {
         try {
-            //TBR: Where does this criteria come from
-            const proj = await Proyecto.find({ nombre: nombre });
-            if (!project) {
-                return res.status(406).json({ msg: "El nombre de usuario ya existe" });
+            const proj = await Proyecto.find({ nombre: req.body.nombre });
+            if (proj[0]!=undefined) {
+                return res.status(406).json({ msg: "El nombre del proyecto ya existe" });
+            }
+            next();
+        } catch (err) {
+            console.log(err)
+            return res.status(400).json({
+                msg: "Internal Error"
+            });
+        }
+    },
+    //Related to:
+    //HU-D12: CA2
+    projExistenceId: async function(req,res,next ){
+        try {
+            const proj = await Proyecto.find({ codigo: req.body.id })
+            if (proj[0]==undefined) {
+                return res.status(406).json({ msg: "El id del proyecto no existe" });
             }
             next();
         } catch (err) {

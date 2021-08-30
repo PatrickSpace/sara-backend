@@ -1,29 +1,30 @@
 const express = require("express");
 const router = express.Router();
 const pC = require("../controllers/proyectoController");
-const projMD = require("../middlewares/proyectomd");
+const projMD = require("../middlewares/proyectoMiddleware");
 const {
     authjwt
 } = require("../middlewares/index");
 
-//listar
-router.get("/", [authjwt.verificarToken, authjwt.isCoordinador], pC.findAll);
-
+//listar todos
+router.get("/", [authjwt.verificarToken, authjwt.isCoordinador],
+    pC.findAll);
 //listar por id
-router.get("/:id", [authjwt.verificarToken, authjwt.isProfesor], pC.findbyID);
-
+router.get("/:id", [authjwt.verificarToken, authjwt.isProfesor, projMD.projExistenceId],
+    pC.findbyID);
 // add proyecto
-router.post("/", [authjwt.verificarToken, authjwt.isDirector, projMD.ProjVerifyExistenceByCode], pC.add);
-
+router.post("/", [authjwt.verificarToken, authjwt.isDirector, projMD.projDuplicatedCode, projMD.projDuplicatedName],
+    pC.add);
 // update proyecto
-router.put("/:id", [authjwt.verificarToken, authjwt.isDirector], pC.update);
+router.put("/:id", [authjwt.verificarToken, authjwt.isDirector],
+ pC.update);
 // delete proyecto
-router.delete("/:id", [authjwt.verificarToken, authjwt.isDirector], pC.delete);
+router.delete("/:id", [authjwt.verificarToken, authjwt.isDirector],
+ pC.delete);
 //add documento
 router.post(
     "/doc/:id", [authjwt.verificarToken, authjwt.isProfesor],
-    pC.addDoc
-);
+    pC.addDoc);
 //borrar documento
 router.delete(
     "/doc/:id/:docid", [authjwt.verificarToken, authjwt.isProfesor],
