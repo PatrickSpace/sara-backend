@@ -106,7 +106,7 @@ module.exports = {
     //HU-D06: CA1  
     userbyID: async function(req, res) {
         try {
-            const userfound = await User.findById(req.params.id);
+            const userfound = await User.findById(req.params.id).populate("roles");
             if (!userfound) {
                 res.status(400).json({ msg: ["Este usuario no existe"] });
             }
