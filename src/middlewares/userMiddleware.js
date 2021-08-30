@@ -6,7 +6,7 @@ const secret = process.env.SECRET;
 module.exports = {
     // Related to:
     // HU-D04: CA4
-    verifySelfDeletion: async function(req, res, next) {
+    userSelfDeletion: async function (req, res, next) {
         try {
             const token = req.headers["x-access-token"];
             if (!token) return res.status(403).json({
@@ -24,11 +24,9 @@ module.exports = {
     },
     //Related to 
     //HU-01: CA2
-    verifyDuplicatebyReq: async function(req, res, next) {
+    userDuplicateReq: async function (req, res, next) {
         try {
-            const tgtInfo = req.body;
-            const usr = await User.find({ usuario: tgtInfo.usuario });
-            console.log(usr)
+            const usr = await User.find({ usuario: req.body.usuario });
             if (typeof user != 'undefined') {
                 return res.status(406).json({ msg: " El Usuario ya existe", user: usr });
             }
@@ -39,10 +37,12 @@ module.exports = {
         }
     },
     //Related to:
+    // HU-D06: CA2
     // HU-D02: CA8
     // HU-D03: CA8
     // HU-D04: CA3
-    verifyExistenceById: async function(req, res, next) {
+    // HU-D10: CA3
+    userExistenceId: async function (req, res, next) {
         try {
             const user = await User.findById(req.params.id);
             if (!user) {

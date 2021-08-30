@@ -25,15 +25,15 @@ router.get(
     userController.userbyID
 );
 router.post(
-    "/", [authjwt.verificarToken, authjwt.isDirector, userMD.verifyDuplicatebyReq],
+    "/", [authjwt.verificarToken, authjwt.isDirector, userMD.userDuplicateReq],
     userController.createuser
 );
 router.put(
-    "/:id", [authjwt.verificarToken, authjwt.isDirector, userMD.verifyExistenceById],
+    "/:id", [authjwt.verificarToken, authjwt.isDirector, userMD.userExistenceId],
     userController.update
 );
 router.delete(
-    "/:id", [authjwt.verificarToken, authjwt.isDirector, userMD.verifyExistenceById, userMD.verifySelfDeletion],
+    "/:id", [authjwt.verificarToken, authjwt.isDirector, userMD.userExistenceId, userMD.userSelfDeletion],
     userController.delete
 );
 module.exports = router;

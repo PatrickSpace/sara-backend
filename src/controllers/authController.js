@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const secret = process.env.SECRET;
 
 module.exports = {
-    login: async function(req, res) {
+    login: async function (req, res) {
         try {
             const userFound = await User.findOne({
                 usuario: req.body.usuario,
@@ -31,14 +31,12 @@ module.exports = {
             }, process.env.SECRET, {
                 expiresIn: 86400,
             });
-            const a = jwt.verify(token, secret);
             res.status(200).json({
-                token: token,
-                metadata: a
+                token: token
             });
         } catch (error) {
             console.log(error);
         }
     },
-    logout: async function(req, res) {},
+    logout: async function (req, res) { },
 };

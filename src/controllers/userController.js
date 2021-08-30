@@ -102,6 +102,8 @@ module.exports = {
             console.log(err);
         }
     },
+    //Complies with:
+    //HU-D06: CA1  
     userbyID: async function(req, res) {
         try {
             const userfound = await User.findById(req.params.id);
@@ -109,6 +111,19 @@ module.exports = {
                 res.status(400).json({ msg: ["Este usuario no existe"] });
             }
             userfound["password"] = ""
+            console.log(userfound);
+            res.status(200).json({ items: userfound });
+        } catch (err) {
+            console.log(err);
+            res.status(400).json({ msg: ["Ocurrio un error"] });
+        }
+    },
+    UNSAFE_userbyID: async function(req, res) {
+        try {
+            const userfound = await User.findById(req.params.id);
+            if (!userfound) {
+                res.status(400).json({ msg: ["Este usuario no existe"] });
+            }
             console.log(userfound);
             res.status(200).json({ items: userfound });
         } catch (err) {
