@@ -1,8 +1,9 @@
 const User = require("../models/User");
 const Rol = require("../models/Rol");
+const Proyecto = require("../models/Proyecto");
 const jwt = require("jsonwebtoken");
 
-const errors = async(nombre, usuario, password, roles) => {
+const errors = async (nombre, usuario, password, roles) => {
     const errorsarray = [];
     if (!nombre || nombre === "") errorsarray.push("Ingrese un nombre");
     if (!usuario || usuario === "") errorsarray.push("Ingrese un usuario");
@@ -23,7 +24,7 @@ const errors = async(nombre, usuario, password, roles) => {
     return errorsarray;
 };
 
-const lookForRole = async(rol) => {
+const lookForRole = async (rol) => {
     switch (rol) {
         case "profesor":
             val = '60eb439908800d0318b9aa70';
@@ -40,7 +41,7 @@ const lookForRole = async(rol) => {
 }
 
 module.exports = {
-    getAll: async function(req, res) {
+    getAll: async function (req, res) {
         try {
             const lista = await User.find({},
                 "proyectos _id nombre usuario"
@@ -50,13 +51,13 @@ module.exports = {
             console.log(err);
         }
     },
-    getProfesores: async function(req, res) {
+    getProfesores: async function (req, res) {
         try {
             usuarios = await lookForRole("profesor");
             let profes = [];
             if (usuarios.length > 0) {
                 usuarios.forEach((user) => {
-                    if (!(user.roles.some(function(rol) { return rol.nombre === "director" || rol.nombre === "coordinador"; }))) {
+                    if (!(user.roles.some(function (rol) { return rol.nombre === "director" || rol.nombre === "coordinador"; }))) {
                         profes.push(user)
                     };
                 });
@@ -68,13 +69,13 @@ module.exports = {
             console.log(err);
         }
     },
-    getCoordinadores: async function(req, res) {
+    getCoordinadores: async function (req, res) {
         try {
             usuarios = await lookForRole("coordinador");
             let profes = [];
             if (usuarios.length > 0) {
                 usuarios.forEach((user) => {
-                    if (!(user.roles.some(function(rol) { return rol.nombre === "director" }))) {
+                    if (!(user.roles.some(function (rol) { return rol.nombre === "director" }))) {
                         profes.push(user)
                     };
                 });
@@ -86,7 +87,7 @@ module.exports = {
             console.log(err);
         }
     },
-    getDirectores: async function(req, res) {
+    getDirectores: async function (req, res) {
         try {
             usuarios = await lookForRole("director");
             let profes = [];
@@ -104,7 +105,7 @@ module.exports = {
     },
     //Complies with:
     //HU-D06: CA1  
-    userbyID: async function(req, res) {
+    userbyID: async function (req, res) {
         try {
             const userfound = await User.findById(req.params.id).populate("roles");
             if (!userfound) {
@@ -118,7 +119,7 @@ module.exports = {
             res.status(400).json({ msg: ["Ocurrio un error"] });
         }
     },
-    UNSAFE_userbyID: async function(req, res) {
+    UNSAFE_userbyID: async function (req, res) {
         try {
             const userfound = await User.findById(req.params.id);
             if (!userfound) {
@@ -131,7 +132,7 @@ module.exports = {
             res.status(400).json({ msg: ["Ocurrio un error"] });
         }
     },
-    createuser: async function(req, res) {
+    createuser: async function (req, res) {
         try {
             const { nombre, usuario, password, roles } = req.body;
             const errores = await errors(nombre, usuario, password, roles);
@@ -154,7 +155,7 @@ module.exports = {
             res.status(400).json({ msg: ["usuario no creado"] });
         }
     },
-    delete: async function(req, res) {
+    delete: async function (req, res) {
         try {
             await User.findByIdAndDelete(req.params.id);
             res.status(200).json({ msg: "Usuario borrado exitosamente" });
@@ -163,7 +164,7 @@ module.exports = {
             res.status(400).json({ msg: ["Ocurrió un error"] });
         }
     },
-    update: async function(req, res) {
+    update: async function (req, res) {
         try {
             const { nombre, usuario, roles } = req.body;
             const foundRoles = await Rol.find({ nombre: { $in: roles } });
@@ -179,4 +180,16 @@ module.exports = {
             res.status(400).json({ msg: ["Ocurrió un error"] });
         }
     },
+    asignProyect: async function (req, res) {
+        try {
+            console.log(req.params.id)
+            const user = await User.findById(req.params.id);
+            console.log(user);
+            res.status(200).json({ profe: user });
+        } catch (err) {
+            console.log(err)
+            res.status(400).json({ msg: ["Internal Error"] })
+
+        }
+    }
 };

@@ -36,4 +36,8 @@ router.delete(
     "/:id", [authjwt.verificarToken, authjwt.isDirector, userMD.userExistenceId, userMD.userSelfDeletion],
     userController.delete
 );
+router.put(
+    "/asignar/:id", [authjwt.verificarToken, authjwt.isDirector],
+    userController.asignProyect
+);
 module.exports = router;

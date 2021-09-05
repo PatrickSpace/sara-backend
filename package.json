@@ -14,12 +14,14 @@
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.3",
     "pdf-parse": "^1.1.1",
-    "dotenv": "^10.0.0",
-    "morgan": "^1.10.0"
+    "pdfjs-dist": "^2.9.359"
   },
   "devDependencies": {
     "dotenv": "^10.0.0",

@@ -1,6 +1,7 @@
 const Proyecto = require("../models/Proyecto");
+
 module.exports = {
-    adderrors: async function(req, res, next) {
+    adderrors: async function (req, res, next) {
         let errors = [];
         const {
             codigo,
@@ -33,62 +34,47 @@ module.exports = {
             return;
         }
     },
-    //Related to:
-    //HU-D07: CA7
-    //HU-D09: CA7
-    projDuplicatedCode: async function(req, res, next) {
-        try {
-            const proj = await Proyecto.find({ codigo: req.body.codigo });
-            console.log(proj[0])
-            if (proj[0]!=undefined) {
-                return res.status(406).json({ msg: "El codigo ya existe" });
+    checkDuplicate(value) {
+        return async (req, res, next) => {
+            switch (value) {
+                //Related to:
+                //HU-D07: CA7
+                //HU-D09: CA7
+                case "Codigo":
+                    val = { codigo: req.body.codigo };
+                    break;
+                //Related to:
+                //HU-D12: CA2
+                case "Id":
+                    val = { id: req.body.id };
+                    break;
+                //Related to:
+                //HU-D07: CA8
+                case "Nombre":
+                    val = { nombre: req.body.nombre };
+                    break;
             }
-            next();
-        } catch (err) {
-            console.log(err)
-            return res.status(400).json({
-                msg: "Internal Error"
-            });
+            try {
+                const proj = await Proyecto.find(val);
+                if (proj[0] != undefined) {
+                    errmsg = "El " + value + " ya existe"
+                    return res.status(406).json({ msg: errmsg });
+                }
+                next();
+            } catch (error) {
+                console.log(err)
+                return res.status(400).json({
+                    msg: "Internal Error"
+                });
+            }
         }
     },
     //Related to:
     //HU-D12: CA2
-    projDuplicatedId: async function(req, res, next) {
+    projExistenceId: async function (req, res, next) {
         try {
-            const proj = await Proyecto.find({ codigo: req.body.id })
-            if (proj[0]!=undefined) {
-                return res.status(406).json({ msg: "El id del proyecto ya existe" });
-            }
-            next();
-        } catch (err) {
-            console.log(err)
-            return res.status(400).json({
-                msg: "Internal Error"
-            });
-        }
-    },
-    //Related to:
-    //HU-D07: CA8
-    projDuplicatedName: async function(req, res, next) {
-        try {
-            const proj = await Proyecto.find({ nombre: req.body.nombre });
-            if (proj[0]!=undefined) {
-                return res.status(406).json({ msg: "El nombre del proyecto ya existe" });
-            }
-            next();
-        } catch (err) {
-            console.log(err)
-            return res.status(400).json({
-                msg: "Internal Error"
-            });
-        }
-    },
-    //Related to:
-    //HU-D12: CA2
-    projExistenceId: async function(req,res,next ){
-        try {
-            pid=req.params.id
-            if (pid.length!=24){
+            pid = req.params.id
+            if (pid.length != 24) {
                 return res.status(406).json({ msg: "El id del proyecto es invalido" });
             }
             const proj = await Proyecto.findById(pid)
@@ -102,5 +88,17 @@ module.exports = {
                 msg: "Internal Error"
             });
         }
+    },
+    docIsPdf: async function (req, res, next) {
+        try {
+            if (req.file.mimetype != "application/pdf") {
+                return res.status(406).json({ msg: "El documento no es un pdf" });
+            }
+            next();
+        } catch (err) {
+            console.log(err);
+            return res.status(400).json("Internal Error")
+        }
+
     }
 };

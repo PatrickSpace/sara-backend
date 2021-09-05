@@ -1,5 +1,24 @@
 const Proyecto = require("../models/Proyecto");
 const Documento = require("../models/Documento");
+const User = require("../models/User");
+const pdfjs = require("pdfjs-dist/legacy/build/pdf.js");
+
+function parsetxt(stream){
+  return stream.promise.then(function(pdf){
+    var mpages = pdf._pdfInfo.numPages;
+    var arrPromises = [];
+    for (var i = 1; i <= mpages ; i++){
+      arrPromises.push(pdf.getPage(i).then(function(page){
+        return page.getTextContent().then(function(text){
+          return text.items.map(function(s){return s.str;}).join('');
+        });
+      }));
+    }
+    return Promise.all(arrPromises).then(function(txt){
+      return txt.join('');
+    })
+  });
+}
 
 module.exports = {
   findAll: async function (req, res) {
@@ -89,7 +108,7 @@ module.exports = {
       }
       if (borrado) {
         await proyectofound.save();
-        await Proyecto.findByIdAndDelete(req.params.docid);
+        await Documento.findByIdAndDelete(req.params.docid);
         res.status(200).json({ msg: "El Documento fue borrado" });
       } else {
         return res.status(400).json({
@@ -101,4 +120,47 @@ module.exports = {
       res.status(400).json({ msg: "ocurrió un error" });
     }
   },
+  UploadDoc: async function(req, res){
+    try {
+      let data = new Uint8Array(req.file.buffer)
+      let stream = await pdfjs.getDocument(data);
+      var doc = await parsetxt(stream);
+      console.log("Doc uploaded => size: "+ Buffer.byteLength(doc));
+      let name = req.file.originalname;
+      const newdoc = new Documento({nombre:name,texto:doc});
+      const proyectofound = await Proyecto.findById(req.params.id);
+      const docsaved = await newdoc.save();
+      proyectofound.documentos.push(docsaved._id);
+      const proyectosaved = await proyectofound.save();
+      return res.status(200).json({ msg: "documento guardado",documento: docsaved, proyecto: proyectosaved._id });
+
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({msg:"ocurrió un error"});
+    }
+  },
+
+  findFree: async function (req, res) {
+    try {
+      const users = await User.find();
+      const projs = await Proyecto.find();
+      console.log(projs[0].id);
+      var test = [];
+      users.forEach(user => {
+       test=test.concat(user.proyectos)
+      });
+      var free=[]
+      projs.forEach(proj => {
+        if(!(test.includes(proj.id))){
+          free.push(proj);
+        }
+      });
+      return res.status(200).json({items:free});
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({msg:"Internal Error"});
+    }
+  }
+
+
 };
