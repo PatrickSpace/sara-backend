@@ -9,17 +9,15 @@ module.exports = {
     userSelfDeletion: async function (req, res, next) {
         try {
             const token = req.headers["x-access-token"];
-            if (!token) return res.status(403).json({
-                msg: "no hay token USRMD_SPK"
-            });
+            if (!token) return res.status(403).json({ msg: ["no hay token"] });
             const decoded = jwt.verify(token, secret);
             if (decoded.id == req.params.id) {
-                return res.status(406).json({ msg: "You are trying to delete your own user" })
+                return res.status(400).json({ msg: ["You are trying to delete your own user"] })
             }
             next();
         } catch (err) {
             console.log(err)
-            return res.status(400).json({ msg: "Internal Error" });
+            return res.status(400).json({ msg: ["Ocurrió un error"] });
         }
     },
     //Related to 
@@ -28,12 +26,12 @@ module.exports = {
         try {
             const usr = await User.find({ usuario: req.body.usuario });
             if (typeof user != 'undefined') {
-                return res.status(406).json({ msg: " El Usuario ya existe", user: usr });
+                return res.status(400).json({ msg: ["El Usuario ya existe"] });
             }
             next();
         } catch (err) {
             console.log(err)
-            return res.status(400).json({ msg: "Internal Error Dupe" });
+            return res.status(400).json({ msg: ["Ocurrió un error"] });
         }
     },
     //Related to:
@@ -46,12 +44,12 @@ module.exports = {
         try {
             const user = await User.findById(req.params.id);
             if (!user) {
-                return res.status(406).json({ msg: " El Usuario no existe" });
+                return res.status(400).json({ msg: ["El Usuario no existe"] });
             }
             next();
         } catch (err) {
             console.log(err)
-            return res.status(400).json({ msg: "Internal Error" });
+            return res.status(400).json({ msg: ["Ocurrió un error"] });
         }
     }
 }
