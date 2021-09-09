@@ -182,10 +182,11 @@ module.exports = {
     },
     asignProyect: async function (req, res) {
         try {
-            console.log(req.params.id)
             const user = await User.findById(req.params.id);
-            console.log(user);
-            res.status(200).json({ profe: user });
+            const projs = req.body.id
+            projs.forEach((proj) => {user.proyectos.push(proj.toString())})
+            const response = await User.findByIdAndUpdate(req.params.id, {proyectos: user.proyectos})
+            res.status(200).json({ msg: "Usuario actualizado exitosamente"});
         } catch (err) {
             console.log(err)
             res.status(400).json({ msg: ["Internal Error"] })

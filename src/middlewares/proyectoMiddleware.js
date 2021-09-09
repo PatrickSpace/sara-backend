@@ -100,5 +100,19 @@ module.exports = {
             return res.status(400).json("Internal Error")
         }
 
+    },
+    projExistencebyBody: async function (req, res, next) {
+        try {
+            const records = await Proyecto.find().where('_id').in(req.body.id);
+            const aux=[]
+            records.forEach(rec =>{
+                aux.push(rec.id);
+            })
+            req.body.id=aux
+            next();
+        } catch (err) {
+            console.log(err)
+            return res.status(400).json({ msg: "Internal Error"})
+        }
     }
 };

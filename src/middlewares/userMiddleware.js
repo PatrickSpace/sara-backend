@@ -53,5 +53,5 @@ module.exports = {
             console.log(err)
             return res.status(400).json({ msg: "Internal Error" });
         }
-    },
+    }
 }

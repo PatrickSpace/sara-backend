@@ -73,6 +73,8 @@ module.exports = {
       res.status(400).json({ msg: ["Ocurrió un error"] });
     }
   },
+  /*
+  //Deprecated, do not use
   addDoc: async function (req, res) {
     try {
       const { nombre, texto } = req.body;
@@ -90,7 +92,7 @@ module.exports = {
       console.log(err);
       res.status(400).json({ msg: "ocurrió un error" });
     }
-  },
+  },*/
   deleteDoc: async function (req, res) {
     try {
       let borrado = false;
