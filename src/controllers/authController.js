@@ -23,7 +23,7 @@ module.exports = {
                     .status(400)
                     .json({
                         token: null,
-                        msg: "Contraseña incorrecta"
+                        msg: "La contraseña es incorrecta"
                     });
             }
             const token = await jwt.sign({
