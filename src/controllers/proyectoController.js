@@ -141,7 +141,6 @@ module.exports = {
       return res.status(400).json({ msg: ["Ocurrió un error"] });
     }
   },
-
   findFree: async function (req, res) {
     try {
       const users = await User.find();
@@ -165,5 +164,14 @@ module.exports = {
       console.log(error);
       return res.status(400).json({ msg: ["Ocurrió un error"] });
     }
+  },
+  askProj: async function (req, res){
+    try {
+      return res.status(404).json({ msg: ["Not implemented yet"]})
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ msg: ["Ocurrió un error"] });
+    }
+
   }
 };
