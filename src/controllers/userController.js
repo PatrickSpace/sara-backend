@@ -146,7 +146,7 @@ module.exports = {
                 newUser.roles = foundRoles.map((rol) => rol._id);
                 const savedUser = await newUser.save();
 
-                res.status(200).json({ msg: "Usuario creado exitosamente" });
+                res.status(200).json({ msg: "Usuario agregado exitosamente" });
             } else {
                 res.status(400).json({ msg: errores });
             }
