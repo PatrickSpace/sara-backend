@@ -33,7 +33,8 @@ module.exports = {
             });
             res.status(200).json({
                 token: token,
-                rol: userFound.roles
+                rol: userFound.roles,
+                nombre: userFound.nombre
             });
         } catch (error) {
             console.log(error);
