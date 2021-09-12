@@ -12,7 +12,7 @@ const errors = async (nombre, usuario, password, roles) => {
     if (usuario) {
         const userFound = await User.findOne({ usuario: usuario });
         if (userFound) {
-            errorsarray.push("Este nombre de usuario ya está en uso");
+            errorsarray.push("Este nombre de usuario ya se encuentra en uso");
         }
     }
     if (roles) {
