@@ -32,7 +32,8 @@ module.exports = {
                 expiresIn: 86400,
             });
             res.status(200).json({
-                token: token
+                token: token,
+                rol: userFound.roles
             });
         } catch (error) {
             console.log(error);
