@@ -2,19 +2,20 @@ const Proyecto = require("../models/Proyecto");
 const Documento = require("../models/Documento");
 const User = require("../models/User");
 const pdfjs = require("pdfjs-dist/legacy/build/pdf.js");
+const { compareSync } = require("bcryptjs");
 
-function parsetxt(stream){
-  return stream.promise.then(function(pdf){
+function parsetxt(stream) {
+  return stream.promise.then(function (pdf) {
     var mpages = pdf._pdfInfo.numPages;
     var arrPromises = [];
-    for (var i = 1; i <= mpages ; i++){
-      arrPromises.push(pdf.getPage(i).then(function(page){
-        return page.getTextContent().then(function(text){
-          return text.items.map(function(s){return s.str;}).join('');
+    for (var i = 1; i <= mpages; i++) {
+      arrPromises.push(pdf.getPage(i).then(function (page) {
+        return page.getTextContent().then(function (text) {
+          return text.items.map(function (s) { return s.str; }).join('');
         });
       }));
     }
-    return Promise.all(arrPromises).then(function(txt){
+    return Promise.all(arrPromises).then(function (txt) {
       return txt.join('');
     })
   });
@@ -25,21 +26,21 @@ module.exports = {
     try {
       const lista = await Proyecto.find();
       res.status(200).json({ items: lista });
-    } catch (err) {
-      res.status(400).json({ msg: "Ocurrió un error" });
-      console.log(err);
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ msg: ["Ocurrió un error"] });
     }
   },
   findbyID: async function (req, res) {
     try {
       const proyectofound = await Proyecto.findById(req.params.id);
       if (!proyectofound) {
-        res.status(400).json({ msg: "Este proyecto no existe" });
+        res.status(400).json({ msg: ["Este proyecto no existe"] });
       }
       res.status(200).json({ proyectofound });
-    } catch (err) {
-      console.log(err);
-      res.status(400).json({ msg: "Ocurrio un error" });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ msg: ["Ocurrió un error"] });
     }
   },
   add: async function (req, res) {
@@ -48,10 +49,9 @@ module.exports = {
       const newproyecto = new Proyecto({ codigo, nombre });
       const usersaved = await newproyecto.save();
       res
-        .status(200)
-        .json({ msg: "El proyecto fue agregado", id: usersaved._id });
-    } catch (err) {
-      res.status(400).json({ msg: "ocurrió un error" });
+        .status(200).json({ msg: "El proyecto fue agregado", id: usersaved._id });
+    } catch (error) {
+      return res.status(400).json({ msg: ["Ocurrió un error"] });
     }
   },
   update: async function (req, res) {
@@ -59,20 +59,22 @@ module.exports = {
       const { codigo, nombre } = req.body;
       await Proyecto.findByIdAndUpdate(req.params.id, { codigo, nombre });
       res.status(200).json({ msg: `El Proyecto ${nombre} fue actualizado` });
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
       res.status(400).json({ msg: ["Ocurrió un error"] });
     }
   },
   delete: async function (req, res) {
     try {
       await Proyecto.findByIdAndDelete(req.params.id);
-      res.status(204).json({ msg: `El Proyecto fue borrado exitosamente` });
-    } catch (err) {
-      console.log(err);
-      res.status(400).json({ msg: ["Ocurrió un error"] });
+      res.status(204).json({ msg: "El Proyecto fue borrado exitosamente" });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ msg: ["Ocurrió un error"] });
     }
   },
+  /*
+  //Deprecated, do not use
   addDoc: async function (req, res) {
     try {
       const { nombre, texto } = req.body;
@@ -86,17 +88,17 @@ module.exports = {
       res
         .status(201)
         .json({ msg: "documento guardado", proyecto: proyectosaved._id });
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
       res.status(400).json({ msg: "ocurrió un error" });
     }
-  },
+  },*/
   deleteDoc: async function (req, res) {
     try {
       let borrado = false;
       const proyectofound = await Proyecto.findById(req.params.id);
       if (!proyectofound) {
-        return res.status(400).json({ msg: "el proyecto no existe" });
+        return res.status(400).json({ msg: ["el proyecto no existe"] });
       }
       for (var i = 0; i < proyectofound.documentos.length; i++) {
         console.log(proyectofound.documentos[i]);
@@ -112,55 +114,64 @@ module.exports = {
         res.status(200).json({ msg: "El Documento fue borrado" });
       } else {
         return res.status(400).json({
-          msg: "el Documento que intenta borrar no existe en este proyecto",
+          msg: ["el Documento que intenta borrar no existe en este proyecto"],
         });
       }
-    } catch (err) {
-      console.log(err);
-      res.status(400).json({ msg: "ocurrió un error" });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ msg: ["Ocurrió un error"] });
     }
   },
-  UploadDoc: async function(req, res){
+  UploadDoc: async function (req, res) {
     try {
       let data = new Uint8Array(req.file.buffer)
       let stream = await pdfjs.getDocument(data);
       var doc = await parsetxt(stream);
-      console.log("Doc uploaded => size: "+ Buffer.byteLength(doc));
+      console.log("Doc uploaded => size: " + Buffer.byteLength(doc));
       let name = req.file.originalname;
-      const newdoc = new Documento({nombre:name,texto:doc});
+      const newdoc = new Documento({ nombre: name, texto: doc });
       const proyectofound = await Proyecto.findById(req.params.id);
       const docsaved = await newdoc.save();
       proyectofound.documentos.push(docsaved._id);
       const proyectosaved = await proyectofound.save();
-      return res.status(200).json({ msg: "documento guardado",documento: docsaved, proyecto: proyectosaved._id });
+      return res.status(200).json({ msg: "documento guardado", documento: docsaved, proyecto: proyectosaved._id });
 
     } catch (error) {
       console.log(error);
-      return res.status(400).json({msg:"ocurrió un error"});
+      return res.status(400).json({ msg: ["Ocurrió un error"] });
     }
   },
-
   findFree: async function (req, res) {
     try {
       const users = await User.find();
       const projs = await Proyecto.find();
-      console.log(projs[0].id);
-      var test = [];
+      var UsrIDs = [];
+      var free = [];
       users.forEach(user => {
-       test=test.concat(user.proyectos)
-      });
-      var free=[]
-      projs.forEach(proj => {
-        if(!(test.includes(proj.id))){
-          free.push(proj);
+        if (user != '') {
+          user.proyectos.forEach(pr => {
+            UsrIDs = UsrIDs.concat(pr.toString())
+          })
         }
       });
-      return res.status(200).json({items:free});
-    } catch (err) {
-      console.log(err);
-      return res.status(400).json({msg:"Internal Error"});
+      projs.forEach(proj => {
+        if (UsrIDs.indexOf(proj.id) == -1) {
+          free.push(proj)
+        }
+      });
+      return res.status(200).json({ items: free });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ msg: ["Ocurrió un error"] });
     }
+  },
+  askProj: async function (req, res){
+    try {
+      return res.status(404).json({ msg: ["Not implemented yet"]})
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ msg: ["Ocurrió un error"] });
+    }
+
   }
-
-
 };

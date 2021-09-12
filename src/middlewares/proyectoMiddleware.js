@@ -28,9 +28,7 @@ module.exports = {
         if (errors.length === 0) {
             next();
         } else {
-            res.status(400).json({
-                msg: errors
-            });
+            res.status(400).json({ msg: errors });
             return;
         }
     },
@@ -58,14 +56,12 @@ module.exports = {
                 const proj = await Proyecto.find(val);
                 if (proj[0] != undefined) {
                     errmsg = "El " + value + " ya existe"
-                    return res.status(406).json({ msg: errmsg });
+                    return res.status(400).json({ msg: [errmsg] });
                 }
                 next();
             } catch (error) {
                 console.log(err)
-                return res.status(400).json({
-                    msg: "Internal Error"
-                });
+                return res.status(400).json({ msg: ["Ocurrió un error"] });
             }
         }
     },
@@ -75,30 +71,42 @@ module.exports = {
         try {
             pid = req.params.id
             if (pid.length != 24) {
-                return res.status(406).json({ msg: "El id del proyecto es invalido" });
+                return res.status(400).json({ msg: ["El id del proyecto es invalido"] });
             }
             const proj = await Proyecto.findById(pid)
             if (!proj) {
-                return res.status(406).json({ msg: "El id del proyecto no existe" });
+                return res.status(400).json({ msg: ["El id del proyecto no existe"] });
             }
             next();
         } catch (err) {
             console.log(err)
-            return res.status(400).json({
-                msg: "Internal Error"
-            });
+            return res.status(400).json({ msg: ["Ocurrió un error"] });
         }
     },
     docIsPdf: async function (req, res, next) {
         try {
             if (req.file.mimetype != "application/pdf") {
-                return res.status(406).json({ msg: "El documento no es un pdf" });
+                return res.status(400).json({ msg: ["El documento no es un pdf"] });
             }
             next();
         } catch (err) {
             console.log(err);
-            return res.status(400).json("Internal Error")
+            return res.status(400).json({ msg: ["Ocurrió un error"] });
         }
 
+    },
+    projExistencebyBody: async function (req, res, next) {
+        try {
+            const records = await Proyecto.find().where('_id').in(req.body.id);
+            const aux = []
+            records.forEach(rec => {
+                aux.push(rec.id);
+            })
+            req.body.id = aux
+            next();
+        } catch (err) {
+            console.log(err)
+            return res.status(400).json({ msg: ["Ocurrió un error"] });
+        }
     }
 };

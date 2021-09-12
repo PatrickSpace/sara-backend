@@ -3,6 +3,7 @@ const router = express.Router();
 const userController = require("../controllers/userController");
 const { authjwt } = require("../middlewares/index");
 const userMD = require("../middlewares/userMiddleware");
+const projMD = require("../middlewares/proyectoMiddleware");
 
 router.get(
     "/", [authjwt.verificarToken, authjwt.isDirector],
@@ -37,7 +38,7 @@ router.delete(
     userController.delete
 );
 router.put(
-    "/asignar/:id", [authjwt.verificarToken, authjwt.isDirector],
+    "/asignar/:id", [authjwt.verificarToken, authjwt.isDirector, projMD.projExistencebyBody],
     userController.asignProyect
 );
 module.exports = router;

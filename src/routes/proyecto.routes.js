@@ -13,6 +13,7 @@ const upload = multer({ storage })
 //listar todos
 router.get("/", [authjwt.verificarToken, authjwt.isCoordinador],
     pC.findAll);
+//listar proyectos no asignados
 router.get("/free", [authjwt.verificarToken, authjwt.isCoordinador],
     pC.findFree);
 //listar por id
@@ -28,10 +29,11 @@ router.put("/:id", [authjwt.verificarToken, authjwt.isDirector],
 router.delete("/:id", [authjwt.verificarToken, authjwt.isDirector],
     pC.delete);
 //add documento
-router.post(
-    "/doc/:id", [authjwt.verificarToken, authjwt.isProfesor],
-    pC.addDoc);
-//Post Documentos
+//Deprecated, do not use
+//router.post(
+//    "/doc/:id", [authjwt.verificarToken, authjwt.isProfesor],
+//    pC.addDoc);
+//upload Documentos
 router.post(
     "/documento/:id", [authjwt.verificarToken, authjwt.isCoordinador,projMD.projExistenceId, upload.single('document'), projMD.docIsPdf],
     pC.UploadDoc);
@@ -40,5 +42,8 @@ router.delete(
     "/doc/:id/:docid", [authjwt.verificarToken, authjwt.isProfesor],
     pC.deleteDoc
 );
-
+router.get(
+    "/ask/:id", [authjwt.verificarToken, authjwt.isCoordinador],
+    pC.askProj
+);
 module.exports = router;
