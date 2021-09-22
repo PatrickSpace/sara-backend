@@ -40,22 +40,35 @@ module.exports = {
                 //HU-D09: CA7
                 case "Codigo":
                     val = { codigo: req.body.codigo };
+                    rsp=1;
                     break;
                 //Related to:
                 //HU-D12: CA2
                 case "Id":
                     val = { id: req.body.id };
+                    rsp=2;
                     break;
                 //Related to:
                 //HU-D07: CA8
                 case "Nombre":
                     val = { nombre: req.body.nombre };
+                    rsp=3;
                     break;
             }
             try {
                 const proj = await Proyecto.find(val);
                 if (proj[0] != undefined) {
-                    errmsg = "El " + value + " ya existe"
+                    switch (rsp) {
+                        case 1:
+                            errmsg = "El codigo del proyecto ya existe";
+                            break;
+                        case 2:
+                            errmsg = "El codigo ya esta en uso";
+                            break;
+                        case 3:
+                            errmsg = "Este nombre del proyecto ya esta en uso";
+                            break;
+                    }
                     return res.status(400).json({ msg: [errmsg] });
                 }
                 next();
@@ -75,7 +88,7 @@ module.exports = {
             }
             const proj = await Proyecto.findById(pid)
             if (!proj) {
-                return res.status(400).json({ msg: ["El id del proyecto no existe"] });
+                return res.status(400).json({ msg: ["Este proyecto no existe"] });
             }
             next();
         } catch (err) {

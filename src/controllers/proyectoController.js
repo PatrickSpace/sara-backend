@@ -49,7 +49,7 @@ module.exports = {
       const newproyecto = new Proyecto({ codigo, nombre });
       const usersaved = await newproyecto.save();
       res
-        .status(200).json({ msg: "El proyecto fue agregado", id: usersaved._id });
+        .status(200).json({ msg: "Proyecto agregado satisfactoriamente", id: usersaved._id });
     } catch (error) {
       return res.status(400).json({ msg: ["Ocurrió un error"] });
     }
