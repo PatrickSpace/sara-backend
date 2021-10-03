@@ -16,11 +16,10 @@ function parsetxt(stream) {
       }));
     }
     return Promise.all(arrPromises).then(function (txt) {
-      return txt.join('');
-    })
+      return txt
+    });
   });
 }
-
 module.exports = {
   findAll: async function (req, res) {
     try {
@@ -93,6 +92,15 @@ module.exports = {
       res.status(400).json({ msg: "ocurrió un error" });
     }
   },*/
+  getAllDocuments: async function(req, res) {
+    try {
+      const alldocs = await Documento.findAll();
+      return res.status(200).json(200)
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ msg: ["Ocurrió un error"] });
+    }
+  },
   deleteDoc: async function (req, res) {
     try {
       let borrado = false;
@@ -127,15 +135,28 @@ module.exports = {
       let data = new Uint8Array(req.file.buffer)
       let stream = await pdfjs.getDocument(data);
       var doc = await parsetxt(stream);
-      console.log("Doc uploaded => size: " + Buffer.byteLength(doc));
+      //console.log("Doc uploaded => size: " + Buffer.byteLength(doc));
+      batch=[];
+      final=[];
+      var WordLimit = 200;
+      for (let i = 1; i < doc.length; i++){
+        batch=[...batch,...doc[i].split(' ').filter(function (n) { return n != ''; })];
+        n=batch.length;
+        while (n>WordLimit) {
+          final.push(batch.slice(0,WordLimit).join(' ').toString());
+          batch=batch.slice(WordLimit,n)
+          n=batch.length;
+        } 
+      }
+      final = final.join("[],[]");
       let name = req.file.originalname;
-      const newdoc = new Documento({ nombre: name, texto: doc });
+      const newdoc = new Documento({ nombre: name, texto: final });
       const proyectofound = await Proyecto.findById(req.params.id);
       const docsaved = await newdoc.save();
       proyectofound.documentos.push(docsaved._id);
       const proyectosaved = await proyectofound.save();
       return res.status(200).json({ msg: "documento guardado", documento: docsaved, proyecto: proyectosaved._id });
-
+      //return res.status(200).json({msg: "documento guardado",documento: final})
     } catch (error) {
       console.log(error);
       return res.status(400).json({ msg: ["Ocurrió un error"] });
@@ -156,7 +177,7 @@ module.exports = {
       });
       projs.forEach(proj => {
         if (UsrIDs.indexOf(proj.id) == -1) {
-          free.push(proj)
+          free.push(proj);
         }
       });
       return res.status(200).json({ items: free });
@@ -165,13 +186,4 @@ module.exports = {
       return res.status(400).json({ msg: ["Ocurrió un error"] });
     }
   },
-  askProj: async function (req, res){
-    try {
-      return res.status(404).json({ msg: ["Not implemented yet"]})
-    } catch (error) {
-      console.log(error);
-      return res.status(400).json({ msg: ["Ocurrió un error"] });
-    }
-
-  }
 };

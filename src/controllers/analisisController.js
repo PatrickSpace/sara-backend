@@ -1,3 +1,4 @@
+const Documento = require('../models/Documento');
 const axios = require("axios");
 const url = "http://127.0.0.1:5000/preguntar"; //microservicio
 //const pdfparse = require("pdf-parse");
@@ -17,12 +18,14 @@ module.exports = {
   // res.send(texto);
   // });
   //},
+
   preguntar: async function (req, res) {
-    //console.log(req.body);
     try {
-      const rpta = await axios.post(url, req.body);
+      const doc = await Documento.findById(req.params.pid);
+      aux=doc.texto
+      const rpta = await axios.post(url,{ pregunta: req.body.Pregunta, contexto: aux })
       console.log(rpta.data);
-      res.send(rpta.data);
+      res.status(200).json({Respuesta: rpta.data})
     } catch (error) {
       console.log(error);
       res.send("f");

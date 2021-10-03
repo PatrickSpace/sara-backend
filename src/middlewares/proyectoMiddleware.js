@@ -83,10 +83,12 @@ module.exports = {
     projExistenceId: async function (req, res, next) {
         try {
             pid = req.params.id
+            console.log(pid)
             if (pid.length != 24) {
                 return res.status(400).json({ msg: ["El id del proyecto es invalido"] });
             }
             const proj = await Proyecto.findById(pid)
+            console.log(proj)
             if (!proj) {
                 return res.status(400).json({ msg: ["Este proyecto no existe"] });
             }

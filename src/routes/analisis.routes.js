@@ -7,7 +7,7 @@ router.get("/pdf", analisisController.test);
 
 //acceso a microservicio
 router.post(
-  "/preguntar",
+  "/preguntar/:pid",
   [authjwt.verificarToken, authjwt.isProfesor],
   analisisController.preguntar
 );

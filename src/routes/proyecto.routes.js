@@ -42,8 +42,5 @@ router.delete(
     "/doc/:id/:docid", [authjwt.verificarToken, authjwt.isProfesor],
     pC.deleteDoc
 );
-router.get(
-    "/ask/:id", [authjwt.verificarToken, authjwt.isCoordinador],
-    pC.askProj
-);
+
 module.exports = router;
