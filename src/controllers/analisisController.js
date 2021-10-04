@@ -21,11 +21,11 @@ module.exports = {
 
   preguntar: async function (req, res) {
     try {
-      const doc = await Documento.findById(req.params.pid);
+      const doc = await Documento.findById(req.params.did);
       aux=doc.texto
       const rpta = await axios.post(url,{ pregunta: req.body.Pregunta, contexto: aux })
-      console.log(rpta.data);
-      res.status(200).json({Respuesta: rpta.data})
+      console.log(rpta);
+      res.status(200).json(rpta.data)
     } catch (error) {
       console.log(error);
       res.send("f");

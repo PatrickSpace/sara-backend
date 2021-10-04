@@ -138,7 +138,7 @@ module.exports = {
       //console.log("Doc uploaded => size: " + Buffer.byteLength(doc));
       batch=[];
       final=[];
-      var WordLimit = 200;
+      var WordLimit = 125;
       for (let i = 1; i < doc.length; i++){
         batch=[...batch,...doc[i].split(' ').filter(function (n) { return n != ''; })];
         n=batch.length;
