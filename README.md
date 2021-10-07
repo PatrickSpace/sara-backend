@@ -28,85 +28,49 @@ Almacena el codigo y nombre de los roles existentes para la app
 El conjunto de rutas y la estructura del objeto JSON en caso sea requerido. NOTA: Todas las rutas comienzan con "host/api/". Para todas las peticiones es necesario estar autenticado, para ello es necesario que en cada petición se incluya un Header de tipo x-access-token que incluya el valor del Token generado cuando se incia sesión.
 
 ## Authenticación
-
-Ruta "/auth"
-
 ### Login
 
-POST "/login" JSON body: {usuario, password}
+**Usan la ruta `/api/auth`**
+
+| Nombre | Metodo | Endpoint | Body | Permisos |
+|---|---|---|---|---|
+| Login | POST | /auth/login | JSON {usuario, password} | Profesor,Coordinador, Director |
 
 ## Proyecto
 
-Ruta "/proyecto"
+**Usa la ruta `/api/proyecto`**
 
-### Obtener todos los proyectos
-
-GET "/"
-Permisos: Director, Coordinador
-
-### Obtener proyecto por ID
-
-GET "/:id"
-Permisos: Director, Coordinador
-
-### Agregar proyecto
-
-POST "/" JSON body: {codigo, nombre}
-Permisos: Director
-
-### Modificar proyecto
-
-PUT "/:id" JSON body: {codigo, nombre}
-Permisos: Director
-
-### Borrar proyecto
-
-DELETE "/:id"
-Permisos: Director
-
-### Asignar documento
-
-POST "/:id/doc" JSON body: {nombre, texto}
-Permisos: Director, Profesor, Coordinador
-
-### Borrar docuemnto
-
-DELETE "/:id/doc"
-Permisos: Director, Coordinador, Profesor
+| Nombre | Metodo | Endpoint | Body | Permisos |
+|---|---|---|---|---|
+| Obtener todos los proyectos | GET | / | none | Coordinador, Director |
+| Obtener proyecto por id | GET | /:id | none | Coordinador, Director |
+| Obtener proyectos no asignados | GET | /free | none | Coordinador, Director |
+| Agregar Proyecto | POST | / | JSON {codigo,nombre} | Director |
+| Asignar documento | POST | /upload/:pid | FORM-DATA [document:file] | Profesor, Coordinador, Director |
+| Modificar Proyecto | PUT | /:id | JSON {codigo,nombre} | Director |
+| Borrar Proyecto | DELETE | /:id | none | Director |
+| Borrar documento | DELETE | /doc/:pid/:did | none | Profesor, Coordinador, Director |
 
 ## Usuario
 
-Ruta "/user"
+**Usa la ruta `/api/user`**
 
-### Obtener todos los usuarios
-
-GET "/"
-Permisos: Director
-
-### Obtener usuario por id
-
-GET "/:id"
-Permisos: Director
-
-### Agregar un usuario
-
-POST "/" JSON body: {nombre, usuario, password, roles}
-Permisos: Director
-
-### Modificar un usuario
-
-PUT "/" JSON body: {nombre, usuario,password, roles}
-Permisos: Director
-
-### Eliminar un usuario
-
-DELETE "/:id"
-Permisos: Director
+| Nombre | Metodo | Endpoint | Body | Permisos |
+|---|---|---|---|---|
+| Obtener todos los usuarios | GET | / | none | Director |
+| Obtener todos los Profesores | GET | /profesores | none | Director |
+| Obtener todos los Coordinadores | GET | /coordinadores | none | Director |
+| Obtener todos los Directores | GET | /directores | none | Director |
+| Obtener usuario por id | GET | /:id | none | Director |
+| Agregar un Usuario | POST | / | JSON {nombre,usuario,password,roles} | Director |
+| Modificar Usuario | PUT | /:id | JSON {nombre,usuario,roles} | Director |
+| Asignar Proyecto a un Usuario | PUT | /asignar/:userid | JSON {id:[userid,...]} | Director |
+| Borrar Usuario | DELETE | /:id | none | Director |
 
 ## Analisis
 
-Ruta "/analisis"
+**Usa la ruta `/api/analisis`**
 
-### Preguntar
-
-POST "/" JSON body: {pregunta}
+| Nombre | Metodo | Endpoint | Body | Permisos |
+|---|---|---|---|---|
+| Realizar Pregunta | POST | /:docid | JSON {Pregunta} | Profesor, Coordinador, Director |
