@@ -24,6 +24,7 @@ module.exports = {
       const doc = await Documento.findById(req.params.did);
       aux=doc.texto
       const rpta = await axios.post(url,{ pregunta: req.body.pregunta, contexto: aux })
+      rpta.data.Score=(rpta.data.Score*100).toFixed(2);
       res.status(200).json(rpta.data)
     } catch (error) {
       console.log(error);

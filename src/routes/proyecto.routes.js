@@ -2,9 +2,7 @@ const express = require("express");
 const router = express.Router();
 const pC = require("../controllers/proyectoController");
 const projMD = require("../middlewares/proyectoMiddleware");
-const {
-    authjwt
-} = require("../middlewares/index");
+const {authjwt} = require("../middlewares/index");
 const multer = require("multer");
 
 const storage = multer.memoryStorage()

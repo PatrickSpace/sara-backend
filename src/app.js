@@ -9,6 +9,7 @@ const authroutes = require("./routes/auth.routes");
 const proyectoroutes = require("./routes/proyecto.routes");
 const userroutes = require("./routes/user.routes");
 const analisisroutes = require("./routes/analisis.routes");
+const calificacionroutes = require("./routes/calificacion.routes")
 
 //basic config
 const basicconfig = require("./libs/basicConfig");
@@ -33,6 +34,7 @@ app.use("/api/auth", authroutes);
 app.use("/api/proyecto", proyectoroutes);
 app.use("/api/user", userroutes);
 app.use("/api/analisis", analisisroutes);
+app.use("/api/calificacion", calificacionroutes);
 
 //init
 app.listen(app.get("port"), () => {
