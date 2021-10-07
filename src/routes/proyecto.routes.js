@@ -35,7 +35,7 @@ router.delete("/:id", [authjwt.verificarToken, authjwt.isDirector],
 //    pC.addDoc);
 //upload Documentos
 router.post(
-    "/documento/:id", [authjwt.verificarToken, authjwt.isCoordinador,projMD.projExistenceId, upload.single('document'), projMD.docIsPdf],
+    "/upload/:id", [authjwt.verificarToken, authjwt.isCoordinador,projMD.projExistenceId, upload.single('document'), projMD.docIsPdf],
     pC.UploadDoc);
 //borrar documento
 router.delete(

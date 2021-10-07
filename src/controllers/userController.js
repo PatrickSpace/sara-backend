@@ -112,7 +112,6 @@ module.exports = {
                 res.status(400).json({ msg: ["Este usuario no existe"] });
             }
             userfound["password"] = ""
-            console.log(userfound);
             res.status(200).json({ items: userfound });
         } catch (err) {
             console.log(err);
@@ -125,7 +124,6 @@ module.exports = {
             if (!userfound) {
                 res.status(400).json({ msg: ["Este usuario no existe"] });
             }
-            console.log(userfound);
             res.status(200).json({ items: userfound });
         } catch (err) {
             console.log(err);

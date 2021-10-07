@@ -109,8 +109,6 @@ module.exports = {
         return res.status(400).json({ msg: ["el proyecto no existe"] });
       }
       for (var i = 0; i < proyectofound.documentos.length; i++) {
-        console.log(proyectofound.documentos[i]);
-        console.log(req.params.docid);
         if (proyectofound.documentos[i] == req.params.docid) {
           proyectofound.documentos.splice(i, 1);
           borrado = true;
@@ -135,7 +133,6 @@ module.exports = {
       let data = new Uint8Array(req.file.buffer)
       let stream = await pdfjs.getDocument(data);
       var doc = await parsetxt(stream);
-      //console.log("Doc uploaded => size: " + Buffer.byteLength(doc));
       batch=[];
       final=[];
       var WordLimit = 140;
@@ -155,7 +152,7 @@ module.exports = {
       const docsaved = await newdoc.save();
       proyectofound.documentos.push(docsaved._id);
       const proyectosaved = await proyectofound.save();
-      return res.status(200).json({ msg: "documento guardado", documento: docsaved, proyecto: proyectosaved._id });
+      return res.status(200).json({ msg: "documento guardado", documento_id: docsaved._id});
       //return res.status(200).json({msg: "documento guardado",documento: final})
     } catch (error) {
       console.log(error);
