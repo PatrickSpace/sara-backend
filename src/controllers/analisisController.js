@@ -23,7 +23,7 @@ module.exports = {
     try {
       const doc = await Documento.findById(req.params.did);
       aux=doc.texto
-      const rpta = await axios.post(url,{ pregunta: req.body.Pregunta, contexto: aux })
+      const rpta = await axios.post(url,{ pregunta: req.body.pregunta, contexto: aux })
       res.status(200).json(rpta.data)
     } catch (error) {
       console.log(error);

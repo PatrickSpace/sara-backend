@@ -34,7 +34,7 @@ El conjunto de rutas y la estructura del objeto JSON en caso sea requerido. NOTA
 
 | Nombre | Metodo | Endpoint | Body | Permisos |
 |---|---|---|---|---|
-| Login | POST | /auth/login | JSON {usuario, password} | Profesor,Coordinador, Director |
+| Login | POST | /auth/login | JSON `{usuario, password}` | Profesor,Coordinador, Director |
 
 ## Proyecto
 
@@ -43,13 +43,13 @@ El conjunto de rutas y la estructura del objeto JSON en caso sea requerido. NOTA
 | Nombre | Metodo | Endpoint | Body | Permisos |
 |---|---|---|---|---|
 | Obtener todos los proyectos | GET | / | none | Coordinador, Director |
-| Obtener proyecto por id | GET | /:id | none | Coordinador, Director |
+| Obtener proyecto por id | GET | /:proy_id | none | Coordinador, Director |
 | Obtener proyectos no asignados | GET | /free | none | Coordinador, Director |
-| Agregar Proyecto | POST | / | JSON {codigo,nombre} | Director |
-| Asignar documento | POST | /upload/:pid | FORM-DATA [document:file] | Profesor, Coordinador, Director |
-| Modificar Proyecto | PUT | /:id | JSON {codigo,nombre} | Director |
-| Borrar Proyecto | DELETE | /:id | none | Director |
-| Borrar documento | DELETE | /doc/:pid/:did | none | Profesor, Coordinador, Director |
+| Agregar Proyecto | POST | / | JSON `{codigo,nombre}` | Director |
+| Asignar documento | POST | /upload/:proy_id | FORM-DATA `[document:file]` | Profesor, Coordinador, Director |
+| Modificar Proyecto | PUT | /:proy_id | JSON `{codigo,nombre}` | Director |
+| Borrar Proyecto | DELETE | /:proy_id | none | Director |
+| Borrar documento | DELETE | /doc/:proy_id/:doc_id | none | Profesor, Coordinador, Director |
 
 ## Usuario
 
@@ -61,11 +61,11 @@ El conjunto de rutas y la estructura del objeto JSON en caso sea requerido. NOTA
 | Obtener todos los Profesores | GET | /profesores | none | Director |
 | Obtener todos los Coordinadores | GET | /coordinadores | none | Director |
 | Obtener todos los Directores | GET | /directores | none | Director |
-| Obtener usuario por id | GET | /:id | none | Director |
-| Agregar un Usuario | POST | / | JSON {nombre,usuario,password,roles} | Director |
-| Modificar Usuario | PUT | /:id | JSON {nombre,usuario,roles} | Director |
-| Asignar Proyecto a un Usuario | PUT | /asignar/:userid | JSON {id:[userid,...]} | Director |
-| Borrar Usuario | DELETE | /:id | none | Director |
+| Obtener usuario por id | GET | /:user_id | none | Director |
+| Agregar un Usuario | POST | / | JSON `{nombre,usuario,password,roles}` | Director |
+| Modificar Usuario | PUT | /:user_id | JSON `{nombre,usuario,roles}` | Director |
+| Asignar Proyecto a un Usuario | PUT | /asignar/:user_id | JSON `{id:[proy_id,...]}` | Director |
+| Borrar Usuario | DELETE | /:user_id | none | Director |
 
 ## Analisis
 
@@ -73,4 +73,4 @@ El conjunto de rutas y la estructura del objeto JSON en caso sea requerido. NOTA
 
 | Nombre | Metodo | Endpoint | Body | Permisos |
 |---|---|---|---|---|
-| Realizar Pregunta | POST | /:docid | JSON {Pregunta} | Profesor, Coordinador, Director |
+| Realizar Pregunta | POST | /preguntar/:doc_id | JSON `{pregunta}` | Profesor, Coordinador, Director |
