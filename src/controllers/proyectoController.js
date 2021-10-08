@@ -42,9 +42,11 @@ module.exports = {
       const id = req.params.id;
       let user = await Usuario.findById(id);
       if (user.proyectos.length === 0) {
+        res.status(400).json({ msg: ["No cuenta con proyectos"] });
+      } else {
         user = await Usuario.findById(id).populate("proyectos");
         res.status(200).json({ proyectos: user.proyectos });
-      } else res.status(200).json({ msg: "No cuenta con proyectos" });
+      }
     } catch (error) {
       console.log(error);
       return res.status(400).json({ msg: ["Ocurrió un error"] });

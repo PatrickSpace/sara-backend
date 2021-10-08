@@ -26,7 +26,7 @@ router.get(
 //listar por profesor
 router.get(
   "/my/:id",
-  [authjwt.verificarToken, authjwt.isProfesor, projMD.projExistenceId],
+  [authjwt.verificarToken, authjwt.isProfesor],
   pC.findbyprofe
 );
 // add proyecto
