@@ -1,6 +1,7 @@
 const Proyecto = require("../models/Proyecto");
 const axios = require("axios");
-const url = "http://3.219.193.15:5000/preguntar"; //microservicio
+//const url = "http://3.219.193.15:5000/preguntar"; //microservicio
+const url = "http://192.168.1.9:5000/preguntar";
 //const pdfparse = require("pdf-parse");
 
 //trayendo el PDF

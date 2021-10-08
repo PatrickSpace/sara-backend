@@ -34,16 +34,20 @@ router.post(
   "/",
   [
     authjwt.verificarToken,
-    authjwt.isDirector,
+    authjwt.isCoordinador,
     projMD.checkDuplicate("Codigo"),
     projMD.checkDuplicate("Nombre"),
   ],
   pC.add
 );
 // update proyecto
-router.put("/:id", [authjwt.verificarToken, authjwt.isDirector], pC.update);
+router.put("/:id", [authjwt.verificarToken, authjwt.isCoordinador], pC.update);
 // delete proyecto
-router.delete("/:id", [authjwt.verificarToken, authjwt.isDirector], pC.delete);
+router.delete(
+  "/:id",
+  [authjwt.verificarToken, authjwt.isCoordinador],
+  pC.delete
+);
 //add documento
 //Deprecated, do not use
 //router.post(
@@ -54,7 +58,7 @@ router.post(
   "/upload/:id",
   [
     authjwt.verificarToken,
-    authjwt.isCoordinador,
+    authjwt.isProfesor,
     projMD.projExistenceId,
     upload.single("document"),
     projMD.docIsPdf,
