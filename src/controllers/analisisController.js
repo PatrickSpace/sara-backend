@@ -1,4 +1,4 @@
-const Documento = require('../models/Documento');
+const Proyecto = require("../models/Proyecto");
 const axios = require("axios");
 const url = "http://3.219.193.15:5000/preguntar"; //microservicio
 //const pdfparse = require("pdf-parse");
@@ -21,11 +21,16 @@ module.exports = {
 
   preguntar: async function (req, res) {
     try {
-      const doc = await Documento.findById(req.params.did);
-      aux=doc.texto
-      const rpta = await axios.post(url,{ pregunta: req.body.pregunta, contexto: aux })
-      rpta.data.Score=(rpta.data.Score*100).toFixed(2);
-      res.status(200).json(rpta.data)
+      const proyectofound = await Proyecto.findById(req.params.id);
+      if (proyectofound) {
+        const texto = proyectofound.doctext;
+        const rpta = await axios.post(url, {
+          pregunta: req.body.pregunta,
+          contexto: texto,
+        });
+        rpta.data.Score = (rpta.data.Score * 100).toFixed(2);
+        res.status(200).json(rpta.data);
+      } else console.log("No existe el proyecto");
     } catch (error) {
       console.log(error);
       res.send("f");

@@ -11,13 +11,8 @@ const proyectoSchema = new Schema(
       type: String,
       required: true,
     },
-    documentos: [
-      {
-        ref: "Document",
-        type: Schema.Types.ObjectId,
-        required: false,
-      },
-    ],
+    docname: { type: String, required: false },
+    doctext: [{ type: String, required: false }],
   },
   { timestamps: true }
 );

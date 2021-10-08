@@ -1,5 +1,6 @@
 const Proyecto = require("../models/Proyecto");
 const Documento = require("../models/Documento");
+const Usuario = require("../models/User");
 const User = require("../models/User");
 const pdfjs = require("pdfjs-dist/legacy/build/pdf.js");
 const { compareSync } = require("bcryptjs");
@@ -9,14 +10,20 @@ function parsetxt(stream) {
     var mpages = pdf._pdfInfo.numPages;
     var arrPromises = [];
     for (var i = 1; i <= mpages; i++) {
-      arrPromises.push(pdf.getPage(i).then(function (page) {
-        return page.getTextContent().then(function (text) {
-          return text.items.map(function (s) { return s.str; }).join('');
-        });
-      }));
+      arrPromises.push(
+        pdf.getPage(i).then(function (page) {
+          return page.getTextContent().then(function (text) {
+            return text.items
+              .map(function (s) {
+                return s.str;
+              })
+              .join("");
+          });
+        })
+      );
     }
     return Promise.all(arrPromises).then(function (txt) {
-      return txt
+      return txt;
     });
   });
 }
@@ -25,6 +32,19 @@ module.exports = {
     try {
       const lista = await Proyecto.find();
       res.status(200).json({ items: lista });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ msg: ["Ocurrió un error"] });
+    }
+  },
+  findbyprofe: async function (req, res) {
+    try {
+      const id = req.params.id;
+      let user = await Usuario.findById(id);
+      if (user.proyectos.length === 0) {
+        user = await Usuario.findById(id).populate("proyectos");
+        res.status(200).json({ proyectos: user.proyectos });
+      } else res.status(200).json({ msg: "No cuenta con proyectos" });
     } catch (error) {
       console.log(error);
       return res.status(400).json({ msg: ["Ocurrió un error"] });
@@ -47,8 +67,10 @@ module.exports = {
       const { codigo, nombre } = req.body;
       const newproyecto = new Proyecto({ codigo, nombre });
       const usersaved = await newproyecto.save();
-      res
-        .status(200).json({ msg: "Proyecto agregado satisfactoriamente", id: usersaved._id });
+      res.status(200).json({
+        msg: "Proyecto agregado satisfactoriamente",
+        id: usersaved._id,
+      });
     } catch (error) {
       return res.status(400).json({ msg: ["Ocurrió un error"] });
     }
@@ -92,10 +114,10 @@ module.exports = {
       res.status(400).json({ msg: "ocurrió un error" });
     }
   },*/
-  getAllDocuments: async function(req, res) {
+  getAllDocuments: async function (req, res) {
     try {
       const alldocs = await Documento.findAll();
-      return res.status(200).json(200)
+      return res.status(200).json(200);
     } catch (error) {
       console.log(error);
       return res.status(400).json({ msg: ["Ocurrió un error"] });
@@ -130,29 +152,37 @@ module.exports = {
   },
   UploadDoc: async function (req, res) {
     try {
-      let data = new Uint8Array(req.file.buffer)
+      let data = new Uint8Array(req.file.buffer);
       let stream = await pdfjs.getDocument(data);
       var doc = await parsetxt(stream);
-      batch=[];
-      final=[];
+      batch = [];
+      final = [];
       var WordLimit = 140;
-      for (let i = 1; i < doc.length; i++){
-        batch=[...batch,...doc[i].split(' ').filter(function (n) { return n != ''; })];
-        n=batch.length;
-        while (n>WordLimit) {
-          final.push(batch.slice(0,WordLimit).join(' ').toString());
-          batch=batch.slice(WordLimit,n)
-          n=batch.length;
-        } 
+      for (let i = 1; i < doc.length; i++) {
+        batch = [
+          ...batch,
+          ...doc[i].split(" ").filter(function (n) {
+            return n != "";
+          }),
+        ];
+        n = batch.length;
+        while (n > WordLimit) {
+          final.push(batch.slice(0, WordLimit).join(" ").toString());
+          batch = batch.slice(WordLimit, n);
+          n = batch.length;
+        }
       }
-      final = final.join("[],[]");
+      //final = final.join("[],[]");
+      console.log(final.length);
       let name = req.file.originalname;
-      const newdoc = new Documento({ nombre: name, texto: final });
       const proyectofound = await Proyecto.findById(req.params.id);
-      const docsaved = await newdoc.save();
-      proyectofound.documentos.push(docsaved._id);
-      const proyectosaved = await proyectofound.save();
-      return res.status(200).json({ msg: "documento guardado", documento_id: docsaved._id});
+      proyectofound.docname = name;
+      proyectofound.doctext = final;
+      await proyectofound.save();
+      return res.status(200).json({
+        msg: "Documento agregado satisfactoriamente",
+        documento_id: 0,
+      });
       //return res.status(200).json({msg: "documento guardado",documento: final})
     } catch (error) {
       console.log(error);
@@ -165,14 +195,14 @@ module.exports = {
       const projs = await Proyecto.find();
       var UsrIDs = [];
       var free = [];
-      users.forEach(user => {
-        if (user != '') {
-          user.proyectos.forEach(pr => {
-            UsrIDs = UsrIDs.concat(pr.toString())
-          })
+      users.forEach((user) => {
+        if (user != "") {
+          user.proyectos.forEach((pr) => {
+            UsrIDs = UsrIDs.concat(pr.toString());
+          });
         }
       });
-      projs.forEach(proj => {
+      projs.forEach((proj) => {
         if (UsrIDs.indexOf(proj.id) == -1) {
           free.push(proj);
         }
