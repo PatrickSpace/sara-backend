@@ -159,7 +159,7 @@ module.exports = {
       var doc = await parsetxt(stream);
       batch = [];
       final = [];
-      var WordLimit = 140;
+      var WordLimit = 200;
       for (let i = 1; i < doc.length; i++) {
         batch = [
           ...batch,
