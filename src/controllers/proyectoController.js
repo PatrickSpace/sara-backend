@@ -80,8 +80,18 @@ module.exports = {
   update: async function (req, res) {
     try {
       const { codigo, nombre } = req.body;
-      await Proyecto.findByIdAndUpdate(req.params.id, { codigo, nombre });
-      res.status(200).json({ msg: `El Proyecto ${nombre} fue actualizado` });
+      const proj = await Proyecto.findById(req.params.id);
+      let payload = {};
+      if (proj.nombre !== nombre) payload.nombre = nombre;
+      if (proj.codigo !== codigo) payload.codigo = codigo;
+      console.log(payload);
+      if (payload === {}) res.status(200).json({ msg: "No hay cambios" });
+      else {
+        await Proyecto.findByIdAndUpdate(req.params.id, payload);
+        return res
+          .status(200)
+          .json({ msg: "Proyecto actualizado satisfactoriamente" });
+      }
     } catch (error) {
       console.log(error);
       res.status(400).json({ msg: ["Ocurrió un error"] });
@@ -90,7 +100,7 @@ module.exports = {
   delete: async function (req, res) {
     try {
       await Proyecto.findByIdAndDelete(req.params.id);
-      res.status(204).json({ msg: "El Proyecto fue borrado exitosamente" });
+      res.status(200).json({ msg: "Proyecto eliminado satisfactoriamente" });
     } catch (error) {
       console.log(error);
       return res.status(400).json({ msg: ["Ocurrió un error"] });

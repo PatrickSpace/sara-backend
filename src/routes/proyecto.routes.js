@@ -41,7 +41,13 @@ router.post(
   pC.add
 );
 // update proyecto
-router.put("/:id", [authjwt.verificarToken, authjwt.isCoordinador], pC.update);
+router.put(
+  "/:id",
+  [authjwt.verificarToken, authjwt.isCoordinador, projMD.projExistenceId],
+  projMD.checkDuplicate("Codigo"),
+  projMD.checkDuplicate("Nombre"),
+  pC.update
+);
 // delete proyecto
 router.delete(
   "/:id",
