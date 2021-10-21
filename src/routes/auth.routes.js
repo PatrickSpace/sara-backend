@@ -4,6 +4,10 @@ const authController = require("../controllers/authController");
 
 router.post("/login", authController.login);
 
+router.get("/test", function (req, res) {
+  res.json("API funciona");
+});
+
 module.exports = router;
 // ejemplos
 // router.get("/user/:id", (req, res) => {
