@@ -14,7 +14,7 @@ module.exports = {
       if (decoded.id == req.params.id) {
         return res
           .status(400)
-          .json({ msg: ["You are trying to delete your own user"] });
+          .json({ msg: ["No puede eliminar su propio usuario"] });
       }
       next();
     } catch (err) {
