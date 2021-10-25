@@ -51,7 +51,7 @@ router.put(
 // delete proyecto
 router.delete(
   "/:id",
-  [authjwt.verificarToken, authjwt.isCoordinador],
+  [authjwt.verificarToken, authjwt.isCoordinador, projMD.projExistenceId],
   pC.delete
 );
 //add documento
