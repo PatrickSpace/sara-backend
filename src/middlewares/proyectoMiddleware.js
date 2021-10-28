@@ -107,16 +107,30 @@ module.exports = {
   },
   projExistencebyBody: async function (req, res, next) {
     try {
-      const records = await Proyecto.find().where("_id").in(req.body.id);
-      const aux = [];
-      records.forEach((rec) => {
-        aux.push(rec.id);
+      const ids = req.body.ids;
+      console.log(ids);
+      let proj = null;
+      ids.forEach(async (id) => {
+        proj = await Proyecto.findById(id);
+        if (!proj) error = true;
       });
-      req.body.id = aux;
+      if (error) {
+        return res.status(400).json({
+          msg: [
+            "Uno o mas no existen, por favor reinicie la página e inténtelo de nuevo",
+          ],
+        });
+      }
       next();
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ msg: ["Ocurrió un error"] });
+      return res
+        .status(400)
+        .json({
+          msg: [
+            "Uno o mas no existen, por favor reinicie la página e inténtelo de nuevo",
+          ],
+        });
     }
   },
 };
